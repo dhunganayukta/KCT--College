@@ -4,17 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KCT_College.Controllers
 {
-    public class CollegeController1 : Controller
+    public class CollegeController : Controller
     {
-       private readonly CollegeInterface _collegeInterface;
-        public CollegeController1(CollegeInterface collegeInterface)
+        private readonly ICollegeService _collegeService;
+
+        public CollegeController(ICollegeService collegeService)
         {
-            _collegeInterface = collegeInterface;
+            _collegeService = collegeService;
         }
         // GET: CollegeController1
         public ActionResult Index()
         {
-            return View();
+            var data = _collegeService.GetInfo();
+            return View(data);
         }
 
         // GET: CollegeController1/Details/5
