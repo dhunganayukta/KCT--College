@@ -1,14 +1,24 @@
-using KCT_College.Data;
+﻿using KCT_College.Data;
 using KCT_College.Interface;
+using KCT_College.Repositories;
 using KCT_College.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICollegeService, CollegeService>();
-builder.Services.AddDbContext<ApplicationdbContext>( options=>options.UseSqlServer());
+
+// ✅ Correctly configure DbContext with connection string
+builder.Services.AddDbContext<ApplicationdbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContext")));
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
 var app = builder.Build();
 
@@ -16,7 +26,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
